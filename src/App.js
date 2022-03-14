@@ -1,23 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
-
+// import { useEffect } from "react";
+// import categoryApi from "./api/categoryApi";
+import CounterFeature from "./component/feature/Counter";
+import Header from "./component/Header";
+import Routers from "./route";
 function App() {
+
+  // useEffect(() => {
+
+  //   const fetchCategory = async () => {
+  //     // const params = {
+  //     //   _limit :10,
+  //     // }
+  //     const categoryList = await categoryApi.getAll();
+  //     // console.log(categoryList);
+  //   };
+  //   fetchCategory();
+  // })
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <Header/>
+    <Routers/>
+    <CounterFeature/>
     </div>
   );
 }
