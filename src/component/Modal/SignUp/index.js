@@ -18,19 +18,12 @@ const theme = createTheme();
 
 export default function SignUp(props) {
   const {onToggle} = props;
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    // eslint-disable-next-line no-console
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
   };
-  const [modalSignIn, setModalSignIn] = React.useState(false)
-  const ShowModalSigIn = () => {
-    setModalSignIn(true);
-  }
+  
+
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">

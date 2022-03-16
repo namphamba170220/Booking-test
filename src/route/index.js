@@ -21,8 +21,8 @@ function Routers() {
             <Route path={RouteConfig.initialRoute} exact component={Homepage}/>
             <Route path={RouteConfig.albums} component={AlbumFeature}/>
             <Route path= {RouteConfig.todos} component={TodoFeature}/>
-            <Route path={RouteConfig.signinURL} component={SignIn}/>
-            <Route path={RouteConfig.signupURL} component={SignUp}/>
+            {/* <Route path={RouteConfig.signinURL} component={SignIn}/> */}
+            {/* <Route path={RouteConfig.signupURL} component={SignUp}/> */}
             {/* <Route path="*" component={pageError}/> */}
         </Switch>
     );

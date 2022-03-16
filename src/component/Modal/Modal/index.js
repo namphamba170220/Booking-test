@@ -9,24 +9,29 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 export default function Modal(props) {
-  const {handleClose, open} = props;
+  const {
+    handleClose, 
+    open,
+    } = props;
   const[isOpenSignUp, setIsOpenSignUp] = React.useState(false);
 
-  const handelToggleModal = () => {
+  const handelToggleModal = (props) => {
     setIsOpenSignUp(!isOpenSignUp);
   }
 
   return (
     <div>
-      <Dialog
+      <Dialog 
         open={open}
         TransitionComponent={Transition}
         keepMounted
         onClose={handleClose}
+        
         aria-describedby="alert-dialog-slide-description"
       > 
         {isOpenSignUp && <SignUp onToggle={handelToggleModal}/>}
-        {!isOpenSignUp && <SignIn onToggle={handelToggleModal}/>}
+        {!isOpenSignUp && <SignIn onToggle={handelToggleModal}/>
+        }
 
       </Dialog>
     </div>

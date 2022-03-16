@@ -11,13 +11,99 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
+import fire from '../../../firebase/firebase';
 import './index.scss';
-
 
 const theme = createTheme();
 
 export default function SignIn(props) {
   const {onToggle} = props;
+
+
+  const[modalSignIn, setModalSignIn] = React.useState(false)
+  const[user, setUser] = React.useState('');
+  const[email,setEmail] = React.useState('');
+  const[password,setPassword] = React.useState('');
+  const[emailError,setEmailError] = React.useState('');
+  const[passwordError,setPasswordError] = React.useState('');
+  const[hasAccount, setHasAccount] = React.useState(false);
+
+  const clearInput = () => {
+    setEmail('');
+    setPassword('');
+  }
+  const clearError = () => {
+    setEmailError('');
+    setPasswordError('');
+  }
+
+  
+
+  const ShowModalSigIn = () => {
+    setModalSignIn(true);
+  }
+
+  const handelSignIn = (email,password) => {
+
+    clearError();
+    fire
+    .auth()
+    .singInWithEmailPassword(email, password)
+    .catch((err) => {
+      switch (err.code) {
+        case "auth/invalid-email":
+          break;
+        case "auth/user-disable":
+        case "auth/user-not-found":
+          setEmailError(err.message);
+          break;
+        case "auth/wrong-password":
+          setPasswordError(err.message);
+          break;
+        default: 
+      }
+    });
+  };
+
+  const handelSignUp = () => {
+    clearInput();
+    fire
+    .auth()
+    .createUserWithEmailAndPassword(email, password)
+    .catch((err) => {
+      switch(err.code){
+        case "auth/email-already-in-use":
+        case "auth/invalid-email":
+        case "auth/user-not-found":
+          setEmailError(err.message);
+          break;
+        case "auth/weak-password":
+          setPasswordError(err.message);
+          break;
+        default:
+      }
+    })
+  };
+
+
+  const handelLogout = () => {
+    fire.auth().signOut();
+  };
+
+  const authListener = () => {
+    fire.auth().onAuthStateChanged((user) => {
+      if(user) {
+        clearInput();
+        setUser(user);
+      } else {
+        setUser('');
+      }
+    })
+  }
+
+  React.useEffect(() => {
+    // authListener();
+  })
 
   const handleSubmitForm = (event) => {
     event.preventDefault();
@@ -27,7 +113,9 @@ export default function SignIn(props) {
       email: data.get('email'),
       password: data.get('password'),
     });
+    handelSignIn(data.get('email'),data.get('password'));
   };
+
   
 
   return (

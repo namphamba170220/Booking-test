@@ -1,9 +1,14 @@
 // import { useEffect } from "react";
 // import categoryApi from "./api/categoryApi";
-import CounterFeature from "./component/feature/Counter";
-import Header from "./component/Header";
-import Routers from "./route";
+
+// import CounterFeature from "./component/feature/Counter";
+import Header from './component/Header';
+import Routers from './route';
+// import firebase from './firebase/firebase';
+
+
 function App() {
+  
 
   // useEffect(() => {
 
@@ -16,11 +21,14 @@ function App() {
   //   };
   //   fetchCategory();
   // })
+
   return (
     <div className="App">
-    <Header/>
-    <Routers/>
-    <CounterFeature/>
+      <Header />
+      <Routers />
+      
+      
+      {/* <CounterFeature/> */}
     </div>
   );
 }
