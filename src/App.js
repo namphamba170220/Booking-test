@@ -1,34 +1,27 @@
-// import { useEffect } from "react";
-// import categoryApi from "./api/categoryApi";
+import React from 'react';
+import { Route, Switch } from 'react-router-dom';
+import Header from './component/Header/index';
+import AlbumFeature from './pages/Album/index';
+import CounterFeature from './pages/Counter/index';
+import ProductFeature from './pages/Product/index';
+import TodoFeature from './pages/Todo/index';
 
-// import CounterFeature from "./component/feature/Counter";
-import Header from './component/Header';
-import Routers from './route';
-// import firebase from './firebase/firebase';
+
+
 
 
 function App() {
-  
 
-  // useEffect(() => {
-
-  //   const fetchCategory = async () => {
-  //     // const params = {
-  //     //   _limit :10,
-  //     // }
-  //     const categoryList = await categoryApi.getAll();
-  //     // console.log(categoryList);
-  //   };
-  //   fetchCategory();
-  // })
 
   return (
     <div className="App">
       <Header />
-      <Routers />
-      
-      
-      {/* <CounterFeature/> */}
+      <Switch>
+          <Route path="/" component={ CounterFeature } exact></Route>
+          <Route path="/todos" component={ TodoFeature }></Route>
+          <Route path="/albums" component={ AlbumFeature }></Route>
+          <Route path="/products" component={ ProductFeature }></Route>
+        </Switch>
     </div>
   );
 }

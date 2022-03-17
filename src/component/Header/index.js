@@ -1,57 +1,159 @@
-import AppleIcon from '@material-ui/icons/Apple';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import * as React from 'react';
-import { Link } from 'react-router-dom';
-import Modal from '../Modal/Modal';
+import { Box, IconButton, Menu, MenuItem } from '@material-ui/core';
+import AppBar from '@material-ui/core/AppBar';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import { makeStyles } from '@material-ui/core/styles';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import { AccountCircle, Close } from '@material-ui/icons';
+import CodeIcon from '@material-ui/icons/Code';
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, NavLink } from 'react-router-dom';
+import Login from '../../pages/Authentication/component/Login/index';
+import Register from '../../pages/Authentication/component/Register/index';
+import { logout } from '../../pages/Authentication/userSlice';
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  title: {
+    flexGrow: 1,
+  },
+  link: {
+    color: '#fff',
+    textDecoration: 'none',
+  },
+  closeBtn: {
+    position: 'absolute',
+    top: theme.spacing(1),
+    right: theme.spacing(1),
+    zIndex: 1,
+  }
+}));
+
+const MODE = {
+  REGISTER: 'register',
+  LOGIN: 'login'
+}
 
 export default function Header() {
+  const dispatch = useDispatch()
+  const loggedInUser = useSelector(state => state.user.current)
+  const isLoggedIn = !!loggedInUser.id;
+  const classes = useStyles();
+  const [open, setOpen] = useState(false);
+  const [mode, setMode] = useState(MODE.LOGIN);
+  const [anchorEl, setAnchorEl] = useState(null)
 
-    const [showModal,setShowModal] = React.useState(false)
-
-    const ShowModalSignIn = () => {
-        setShowModal(true);
-        setOpen(true);
-    }
-    const [open, setOpen] = React.useState(false);
-
-    const handleClickOpen = () => {
+  const handleClickOpen = () => {
     setOpen(true);
-    };
+  };
 
-    const handleClose = () => {
+  const handleClose = () => {
     setOpen(false);
   };
+
+  const handleClickUser = (e) => {
+    setAnchorEl(e.currentTarget)
+  }
+
+  const handleCloseMenu = () => {
+    setAnchorEl(null)
+  }
+
+  const handleLogoutClick = () => {
+    const action = logout()
+    dispatch(action)
+  }
+
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-          >
-            <AppleIcon />
-          </IconButton>
-          <Typography className='homepage' variant="h6" component="div" sx={{ flexGrow: 0.1 }}>
-          <p><Link to="/homepage">Home</Link></p>
+          <CodeIcon className={classes.menuButton}>
+          </CodeIcon>
+          <Typography variant="h6" className={classes.title}>
+            <Link className={classes.link} to="/">
+                EZ Shop
+            </Link>
           </Typography>
-          <Typography className='homepage' variant="h6" component="div" sx={{ flexGrow: 0.1 }}>
-          <p><Link to="/todos">Todos</Link></p>
-          </Typography>
-          <Typography className='homepage' variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          <p><Link to="/albums">Ablums</Link></p>
-          </Typography>
-          <Button color="inherit" onClick={ShowModalSignIn}>Login</Button>
-          <Modal handleClickOpen={handleClickOpen} handleClose={handleClose} open={open}/>
+          <NavLink className={classes.link} to="/todos">
+            <Button color="inherit">Todos</Button>
+          </NavLink>
+          <NavLink className={classes.link} to="/albums">
+            <Button color="inherit">Albums</Button>
+          </NavLink>
+
+          {!isLoggedIn && (
+            <Button color="inherit" onClick={handleClickOpen}>
+              Login
+            </Button>
+          )}
+
+          {isLoggedIn && (
+            <IconButton color="inherit" onClick={handleClickUser}>
+              <AccountCircle />
+            </IconButton>
+          )}
         </Toolbar>
       </AppBar>
-    </Box>
+      <Dialog 
+        disableBackdropClick 
+        disableEscapeKeyDown 
+        open={open} 
+        onClose={handleClose} 
+        aria-labelledby="form-dialog-title"
+        >
+        <IconButton>
+          <Close className={classes.closeBtn} onClick={handleClose}></Close>
+        </IconButton>
+        <DialogContent>
+          {mode === MODE.REGISTER && (
+            <>
+              <Register closeDialog={handleClose}></Register>
+              <Box textAlign="center">
+                <Button color="primary" onClick={() => setMode(MODE.LOGIN)}>
+                  Already an account. Login here 
+                </Button>
+              </Box>
+            </>
+          )}
+          {mode === MODE.LOGIN && (
+            <>
+              <Login closeDialog={handleClose}></Login>
+              <Box textAlign="center">
+                <Button color="primary" onClick={() => setMode(MODE.REGISTER)}>
+                  Don't have an account. Register here 
+                </Button>
+              </Box>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
+      <Menu
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleCloseMenu}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        getContentAnchorEl={null}
+      >
+        <MenuItem onClick={handleCloseMenu}>My account</MenuItem>
+        <MenuItem onClick={handleLogoutClick}>Logout</MenuItem>
+      </Menu>
+    </div>
   );
 }
